@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cybersecurity Policy Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                         sans-serif;
+            background: #f4f6fa;
+            color: #172033;
+        }
+
+        header {
+            background: #14213d;
+            color: white;
+            padding: 25px 20px;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+            font-size: 25px;
+        }
+
+        header p {
+            margin: 0;
+            color: #d5deef;
+            line-height: 1.6;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 35px auto;
+            padding: 0 18px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 5px 25px rgba(20, 33, 61, 0.06);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 19px;
+        }
+
+        .description {
+            color: #647084;
+            line-height: 1.6;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 115px;
+            padding: 14px;
+            border: 1px solid #cfd6e2;
+            border-radius: 9px;
+            resize: vertical;
+            font: inherit;
+            font-size: 15px;
+        }
+
+        textarea:focus {
+            outline: 2px solid #8ca9e8;
+            border-color: #4267b2;
+        }
+
+        button {
+            margin-top: 14px;
+            padding: 12px 22px;
+            background: #244b91;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .examples {
+            margin-top: 20px;
+        }
+
+        .example {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 8px 0;
+            padding: 12px;
+            border: 1px solid #e0e5ee;
+            background: #f9faff;
+            color: #244b91;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .example:hover {
+            background: #edf2ff;
+        }
+
+        #status {
+            margin-top: 15px;
+            color: #647084;
+            white-space: pre-wrap;
+        }
+
+        #answer {
+            white-space: pre-wrap;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .source {
+            border: 1px solid #e0e5ee;
+            border-radius: 9px;
+            padding: 13px;
+            margin-top: 10px;
+            background: #fafbfe;
+        }
+
+        .source strong {
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .source p {
+            margin: 0;
+            color: #647084;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            color: #647084;
+            font-size: 13px;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .panel {
+                padding: 18px;
+            }
+
+            header h1 {
+                font-size: 21px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Cybersecurity Policy & Compliance Assistant</h1>
+            <p>
+                An evidence-grounded AI assistant for cybersecurity
+                frameworks, controls, and compliance guidance.
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <section class="panel">
+            <h2>Ask a question</h2>
+
+            <p class="description">
+                Ask questions about CIS Controls v8, NIST CSF 2.0,
+                and NIST SP 800-53 Revision 5.
+            </p>
+
+            <form id="question-form">
+                <textarea
+                    id="question"
+                    placeholder="Example: What are the six Functions of NIST CSF 2.0?"
+                    required
+                    minlength="3"
+                    maxlength="1000"
+                ></textarea>
+
+                <button id="submit-button" type="submit">
+                    Ask Assistant
+                </button>
+            </form>
+
+            <div id="status" role="status"></div>
+
+            <div class="examples">
+                <p><strong>Try an example</strong></p>
+
+                <button class="example" type="button"
+                    data-question="What are the six Functions of the NIST Cybersecurity Framework 2.0?">
+                    What are the six Functions of NIST CSF 2.0?
+                </button>
+
+                <button class="example" type="button"
+                    data-question="What does CIS Control 1 address?">
+                    What does CIS Control 1 address?
+                </button>
+
+                <button class="example" type="button"
+                    data-question="What does NIST SP 800-53 say about Access Control?">
+                    What does NIST SP 800-53 say about Access Control?
+                </button>
+            </div>
+        </section>
+
+        <section id="answer-panel" class="panel hidden">
+            <h2>Answer</h2>
+            <div id="answer"></div>
+        </section>
+
+        <section id="sources-panel" class="panel hidden">
+            <h2>Retrieved sources</h2>
+            <p class="description">
+                These are the document passages retrieved to support
+                the answer. Verify the cited passages when making
+                compliance decisions.
+            </p>
+            <div id="sources"></div>
+        </section>
+    </main>
+
+    <footer>
+        Evidence-grounded Retrieval-Augmented Generation (RAG)
+        · Academic project prototype
+    </footer>
+
+    <script>
+        const form = document.getElementById("question-form");
+        const questionInput = document.getElementById("question");
+        const submitButton = document.getElementById("submit-button");
+        const statusElement = document.getElementById("status");
+
+        const answerPanel = document.getElementById("answer-panel");
+        const answerElement = document.getElementById("answer");
+
+        const sourcesPanel = document.getElementById("sources-panel");
+        const sourcesElement = document.getElementById("sources");
+
+        document.querySelectorAll(".example").forEach(button => {
+            button.addEventListener("click", () => {
+                questionInput.value = button.dataset.question;
+                questionInput.focus();
+            });
+        });
+
+        form.addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const question = questionInput.value.trim();
+
+            if (question.length < 3) {
+                statusElement.textContent =
+                    "Please enter a longer question.";
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = "Thinking...";
+            statusElement.textContent =
+                "Searching the cybersecurity documents and generating an answer...";
+
+            answerPanel.classList.add("hidden");
+            sourcesPanel.classList.add("hidden");
+
+            answerElement.textContent = "";
+            sourcesElement.replaceChildren();
+
+            try {
+                const response = await fetch("/ask", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ question })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.detail || "The request could not be completed."
+                    );
+                }
+
+                answerElement.textContent = data.answer;
+                answerPanel.classList.remove("hidden");
+
+                for (const source of data.sources || []) {
+                    const card = document.createElement("div");
+                    card.className = "source";
+
+                    const title = document.createElement("strong");
+                    title.textContent = source.source;
+
+                    const details = document.createElement("p");
+                    details.textContent =
+                        `PDF page: ${source.page} · Section: ${source.section}`;
+
+                    card.append(title, details);
+                    sourcesElement.appendChild(card);
+                }
+
+                if ((data.sources || []).length > 0) {
+                    sourcesPanel.classList.remove("hidden");
+                }
+
+                statusElement.textContent = "Answer generated successfully.";
+
+            } catch (error) {
+                statusElement.textContent =
+                    "Error: " + error.message +
+                    "\nCheck that the backend server is running.";
+
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = "Ask Assistant";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+pymupdf
+chromadb
+openai
+python-dotenv
+fastapi
+uvicorn
+pydantic
+rank-bm25
