@@ -1,3 +1,4 @@
+import traceback
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -78,11 +79,9 @@ def ask_question(request: QuestionRequest):
             "sources": sources,
         }
 
-    except Exception:
-        raise HTTPException(
-            status_code=500,
-            detail=(
-                "Unable to process the question. "
-                "Check the server terminal for the underlying error."
-            ),
-        )
+    except Exception as exc:
+     traceback.print_exc()
+    raise HTTPException(
+        status_code=500,
+        detail=f"{type(exc).__name__}: {str(exc)}",
+    )
