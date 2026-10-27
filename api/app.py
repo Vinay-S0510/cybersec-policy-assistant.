@@ -79,9 +79,10 @@ def ask_question(request: QuestionRequest):
             "sources": sources,
         }
 
-    except Exception as exc:
-     traceback.print_exc()
-    raise HTTPException(
-        status_code=500,
-        detail=f"{type(exc).__name__}: {str(exc)}",
-    )
+    except Exception as error:
+        traceback.print_exc()
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"{type(error).__name__}: {str(error)}",
+        ) from error
